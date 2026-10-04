@@ -27,3 +27,17 @@ jobs:
             git pull origin main
             docker compose up -d --build
             docker compose ps
+
+      - name: Notificacion por Telegram
+        if: always()
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELE_USER }}
+          token: ${{ secrets.TELE_KEY }}
+          message: |
+            🚀 *Resultado del Despliegue en EC2*
+            
+            *Repositorio:* ${{ github.repository }}
+            *Rama:* ${{ github.ref_name }}
+            *Estado:* ${{ job.status == 'success' && '✅ Éxito' || '❌ Falló' }}
+            *Commit:* ${{ github.sha }}
