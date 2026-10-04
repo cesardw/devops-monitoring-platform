@@ -1,4 +1,4 @@
-name: Deploy to AWS EC2
+name: CD
 
 on:
   push:
@@ -16,7 +16,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Deploy to EC2
+      - name: CD
         uses: appleboy/ssh-action@v1.2.2
         with:
           host: ${{ secrets.EC2_HOST }}
