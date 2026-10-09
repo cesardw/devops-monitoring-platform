@@ -46,18 +46,34 @@ jobs:
           cd app
           npm audit --audit-level=high --if-present
 
-      #Construccion y validacion de imagenes Docker y Docker Compose    
-  build-and-validate:
+      #Escaneo de imagenes de Docker con Trivy: este paso se encarga de escanear la imagen de Docker construida para detectar vulnerabilidades de seguridad 
+      #en las imagenes y contenedores de Docker  
+  build-and-scan:
     needs: security-and-quality
     runs-on: ubuntu-latest
-
     steps:
-
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Configurar Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build de Docker con Cache
+        uses: docker/build-push-action@v6
+        with:
+          context: ./app
+          load: true
+          tags: devops-app:test
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Escaneo de vulnerabilidades en la Imagen (Trivy)
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'devops-app:test'
+          format: 'table'
+          exit-code: '0'
+          severity: 'CRITICAL,HIGH'
+
       - name: Validar sintaxis de Docker Compose
         run: docker compose config
-
-      - name: Build de prueba para la App
-        run: docker build -t devops-app:test ./app
