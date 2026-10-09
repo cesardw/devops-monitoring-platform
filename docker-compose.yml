@@ -37,7 +37,7 @@ services:
         max-size: "10m"
         max-file: "3"
   nginx:
-    image: nginx:latest
+    image: nginx:1.27-alpine
     container_name: devops-nginx
     restart: unless-stopped
 
@@ -59,7 +59,7 @@ services:
         max-size: "10m"
         max-file: "3"
   prometheus:
-    image: prom/prometheus:latest
+    image: prom/prometheus:v2.54.1
     container_name: devops-prometheus
     restart: unless-stopped
 
@@ -78,7 +78,7 @@ services:
         max-size: "10m"
         max-file: "3"
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana:11.2.0
     container_name: devops-grafana
     restart: unless-stopped
 
@@ -108,7 +108,7 @@ services:
         max-file: "3"
 
   node-exporter:
-    image: prom/node-exporter:latest
+    image: prom/node-exporter:v1.8.2
     container_name: devops-node-exporter
     restart: unless-stopped
 
