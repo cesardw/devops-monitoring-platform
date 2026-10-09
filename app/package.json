@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Aplicacion Node.js con monitoreo Prometheus",
   "main": "server.js",
   "scripts": {
@@ -12,7 +12,7 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
-    "express": "^5.2.1",
-    "prom-client": "^15.1.3"
+    "express": "5.2.1",
+    "prom-client": "15.1.3"
   }
 }

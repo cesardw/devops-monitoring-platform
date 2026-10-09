@@ -5,8 +5,10 @@ services:
       context: ./app
     container_name: devops-app
     restart: unless-stopped
-    ports:
-      - "3000:3000"
+    expose: #le indica a Docker que el contenedor escucha en el puerto 3000 para otros contenedores en la misma red interna (Ndevops-network)
+      - "3000"
+      #port: - "3000:3000" se cambio por expose, esto ayuda en seguridad 
+      #la applicacion Node.js evita que salga directo a internet y se obliga a pasar por Nginx.
 
     environment:
       NODE_ENV: production
@@ -27,7 +29,13 @@ services:
       interval: 30s
       timeout: 5s
       retries: 3
-  
+#logging se puso a cada servicio para limitar que cada contenedor un maximo de 3 archivos de 10mb
+#esto lo hice porque se me lleno el disco de mi EC2 y no me dejaba arrancar Docker
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
   nginx:
     image: nginx:latest
     container_name: devops-nginx
@@ -45,6 +53,11 @@ services:
     networks:
       - devops-network
 
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
   prometheus:
     image: prom/prometheus:latest
     container_name: devops-prometheus
@@ -59,6 +72,11 @@ services:
     networks:
       - devops-network
 
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
   grafana:
     image: grafana/grafana:latest
     container_name: devops-grafana
@@ -76,11 +94,18 @@ services:
     environment:
       GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER}
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
+      #lo quite porque ya lo tengo en el .env
       #GF_SECURITY_ADMIN_USER: admin
       #GF_SECURITY_ADMIN_PASSWORD: admin
 
     networks:
       - devops-network
+
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   node-exporter:
     image: prom/node-exporter:latest
@@ -92,6 +117,12 @@ services:
 
     networks:
       - devops-network
+
+    loggging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 networks:
 
