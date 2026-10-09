@@ -10,5 +10,3 @@
 * **Análisis de Vulnerabilidades en Contenedores:** Escaneo automatizado de vulnerabilidades en tiempo de compilación con **Trivy**.
 * **Despliegue Resiliente y Validado:** Scripts de despliegue mediante SSH a AWS EC2 con **Health Check activo** (`docker inspect`) para confirmar la estabilidad de los servicios antes de concluir la ejecución.
 * **Notificaciones:** Integración con Telegram para alertar el estado final de los despliegues con autor, commit hash y metadata.
-
-* 
