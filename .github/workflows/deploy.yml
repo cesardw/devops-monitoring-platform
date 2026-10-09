@@ -16,16 +16,39 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Conectar EC2
+      - name: Despliegue en EC2 y Verificar Health
         uses: appleboy/ssh-action@v1.2.2
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            #!/bin/bash
+            set -e
+
+            # Navegar al directorio del proyecto en el servidor EC2
             cd ~/devops-monitoring-platform
+
+            # Actualizar el repositorio
+            echo "Descargando cambios... "
             git pull origin main
-            docker compose up -d --build
+
+            # Construir la imagen de Docker y ejecutar los contenedores con Docker Compose
+            echo "Actualizando contenedores... "
+            docker compose up -d --remove-orphans 
+
+            echo "🩺 Esperando Health Check de devops-app..."
+            for i in {1..6}; do
+              STATUS=$(docker inspect --format='{{json .State.Health.Status}}' devops-app 2>/dev/null || echo '"unknown"')
+              if [ "$STATUS" = '"healthy"' ]; then
+                echo "✅ La aplicacion esta respondiendo de forma correcta."
+                break
+              fi
+              echo "Aguardando arranque del servicio ($i/6)..."
+              sleep 5
+            done
+
+            echo "Estado de los contenedores:"
             docker compose ps
 
       - name: Notificacion por Telegram
@@ -38,6 +61,7 @@ jobs:
             🚀 *Resultado del Despliegue en EC2*
             
             *Repositorio:* ${{ github.repository }}
+            *Autor:* ${{ github.actor }}
             *Rama:* ${{ github.ref_name }}
             *Estado:* ${{ job.status == 'success' && '✅ Éxito' || '❌ Falló' }}
             *Commit:* ${{ github.sha }}
