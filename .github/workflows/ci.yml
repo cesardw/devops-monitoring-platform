@@ -10,6 +10,10 @@ on:
     branches:
       - main
 
+env:
+  LANG: en_ES.UTF-8
+  Lc_ALL: en_ES.UTF-8
+
 jobs:
 
   #agregar Gitleaks: este sirve para escanear vulnerabilidades en el código fuente por ejemplo tokens o credenciales expuestas en el codigo fuente. 
@@ -26,6 +30,9 @@ jobs:
 
       - name: Deteccion de secrets expuestos (gitleaks)
         uses: gitleaks/gitleaks-action@v2
+        env:
+          LANG: en_ES.UTF-8
+          LC_ALL: en_ES.UTF-8
 
       - name: Configuracion Node.js
         uses: actions/setup-node@v4
