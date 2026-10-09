@@ -118,7 +118,7 @@ services:
     networks:
       - devops-network
 
-    loggging:
+    logging:
       driver: "json-file"
       options:
         max-size: "10m"
