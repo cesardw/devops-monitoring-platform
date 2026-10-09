@@ -12,7 +12,10 @@ on:
 
 jobs:
 
-  build:
+  #agregar Gitleaks: este sirve para escanear vulnerabilidades en el código fuente por ejemplo tokens o credenciales expuestas en el codigo fuente. 
+  #Se puede agregar como un paso en el flujo de trabajo de CI para escanear el código antes de que se realice un despliegue o una fusión de cambio
+  
+  security-and-quality:
 
     runs-on: ubuntu-latest
 
@@ -21,14 +24,40 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v3
+      - name: Deteccion de secrets expuestos (gitleaks)
+        uses: gitleaks/gitleaks-action@v2
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build Docker image
-        run: docker build -t devops-app:test ./app
+      - name: Configuracion Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: "./app/package-lock.json"
 
-      - name: Validate Docker Compose
+      - name: Instalar dependencies
+        run: |
+          cd app
+          npm ci
+
+      - name: Auditoria de Seguridad en Dependencias
+        run: |
+          cd app
+          npm audit --audit-level=high --if-present
+
+      #Construccion y validacion de imagenes Docker y Docker Compose    
+  build-and-validate:
+    needs: security-and-quality
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Validar sintaxis de Docker Compose
         run: docker compose config
 
-      - name: Build Docker Compose
-        run: docker compose build
+      - name: Build de prueba para la App
+        run: docker build -t devops-app:test ./app
