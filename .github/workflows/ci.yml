@@ -78,7 +78,7 @@ jobs:
         with:
           image-ref: 'devops-app:test'
           format: 'table'
-          exit-code: '0'
+          exit-code: '1'
           severity: 'CRITICAL,HIGH'
 
       - name: Validar sintaxis de Docker Compose
