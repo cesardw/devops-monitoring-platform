@@ -1,34 +1,29 @@
 name: CI
 
 on:
-
   push:
     branches:
       - main
       - feature/hardening-ci-cd
-
   pull_request:
     branches:
       - main
 
 env:
   LANG: en_US.UTF-8
-  Lc_ALL: en_US.UTF-8
+  LC_ALL: en_US.UTF-8
 
 jobs:
 
-  #agregar Gitleaks: este sirve para escanear vulnerabilidades en el código fuente por ejemplo tokens o credenciales expuestas en el codigo fuente. 
-  #Se puede agregar como un paso en el flujo de trabajo de CI para escanear el código antes de que se realice un despliegue o una fusión de cambio
-  
   security-and-quality:
-
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # Agregar Gitleaks: este sirve para escanear vulnerabilidades en el código fuente por ejemplo tokens o credenciales expuestas en el codigo fuente. 
+      # Se puede agregar como un paso en el flujo de trabajo de CI para escanear el código antes de que se realice un despliegue o una fusión de cambio
       - name: Deteccion de secrets expuestos (gitleaks)
         uses: gitleaks/gitleaks-action@v2
         env:
@@ -53,8 +48,6 @@ jobs:
           cd app
           npm audit --audit-level=high --if-present
 
-      #Escaneo de imagenes de Docker con Trivy: este paso se encarga de escanear la imagen de Docker construida para detectar vulnerabilidades de seguridad 
-      #en las imagenes y contenedores de Docker  
   build-and-scan:
     needs: security-and-quality
     runs-on: ubuntu-latest
@@ -74,13 +67,15 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+      # Escaneo de imagenes de Docker con Trivy: este paso se encarga de escanear la imagen de Docker construida para detectar vulnerabilidades de seguridad 
+      # en las imagenes y contenedores de Docker  
       - name: Escaneo de vulnerabilidades en la Imagen (Trivy)
         uses: aquasecurity/trivy-action@master
         with:
           image-ref: 'devops-app:test'
           format: 'table'
           exit-code: '1'
-          ignore-unfixed: true #esto evita que falle el flujo de trabajo si se detectan vulnerabilidades que no tienen una solución disponible
+          ignore-unfixed: true # esto evita que falle el flujo de trabajo si se detectan vulnerabilidades que no tienen una solución disponible
           severity: 'CRITICAL,HIGH'
 
       - name: Validar sintaxis de Docker Compose
