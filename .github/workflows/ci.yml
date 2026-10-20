@@ -58,14 +58,13 @@ jobs:
       - name: Configurar Docker Build
         uses: docker/setup-buildx-action@v3
 
-      - name: Build de Docker con Cache
+      - name: Build de Docker (Sin Cache para actualizar dependencias)
         uses: docker/build-push-action@v6
         with:
           context: ./app
           load: true
           tags: devops-app:test
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          no-cache: true
 
       # Escaneo de imagenes de Docker con Trivy: este paso se encarga de escanear la imagen de Docker construida para detectar vulnerabilidades de seguridad 
       # en las imagenes y contenedores de Docker  
