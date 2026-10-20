@@ -4,7 +4,8 @@ on:
 
   push:
     branches:
-      - main,feature/hardening-ci-cd
+      - main
+      - feature/hardening-ci-cd
 
   pull_request:
     branches:
