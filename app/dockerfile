@@ -6,6 +6,10 @@ COPY package*.json ./
 
 RUN npm ci --omit=dev
 
+# Actualiza npm globalmente para eliminar vulnerabilidades heredadas de la imagen base 
+#realice esto ya que trivy lo detectaba como vulnerabilidad de seguridad, y no se puede actualizar npm en la imagen base
+RUN npm install -g npm@latest
+
 COPY src ./src
 
 ENV NODE_ENV=production
