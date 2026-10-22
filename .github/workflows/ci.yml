@@ -73,9 +73,9 @@ jobs:
         with:
           image-ref: 'devops-app:test'
           format: 'table'
-          exit-code: '0'
+          exit-code: '1'
           ignore-unfixed: true # esto evita que falle el flujo de trabajo si se detectan vulnerabilidades que no tienen una solución disponible
-          severity: 'CRITICAL,HIGH'
+          severity: 'CRITICAL'
 
       - name: Validar sintaxis de Docker Compose
         run: docker compose config
