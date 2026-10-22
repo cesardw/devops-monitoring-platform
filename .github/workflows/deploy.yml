@@ -65,3 +65,5 @@ jobs:
             *Rama:* ${{ github.ref_name }}
             *Estado:* ${{ job.status == 'success' && '✅ Éxito' || '❌ Falló' }}
             *Commit:* ${{ github.sha }}
+            
+            🔗 [Ver detalles en GitHub](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
