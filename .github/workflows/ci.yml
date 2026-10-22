@@ -21,6 +21,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # <--- CORRECCIÓN: Descarga todo el historial para que Gitleaks pueda escanear en Pull Requests
 
       # Agregar Gitleaks: este sirve para escanear vulnerabilidades en el código fuente por ejemplo tokens o credenciales expuestas en el codigo fuente. 
       # Se puede agregar como un paso en el flujo de trabajo de CI para escanear el código antes de que se realice un despliegue o una fusión de cambio
