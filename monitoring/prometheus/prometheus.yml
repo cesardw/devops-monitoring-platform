@@ -1,6 +1,9 @@
 global:
   scrape_interval: 15s
 
+rule_files:
+  - "alerts.yml" #manda a llamar el archivo de alertas
+
 scrape_configs:
 
   - job_name: "prometheus"
