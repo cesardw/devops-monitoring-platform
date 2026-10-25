@@ -67,7 +67,8 @@ services:
       - "9090:9090"
 
     volumes:
-      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/prometheus:/etc/prometheus:ro #toma toda la carpeta de Prometheus y la monta en el contenedor para que tome los archivos de configuracion
+      #- ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro <--- este solo monta el archivo prometheus.yml
 
     networks:
       - devops-network
