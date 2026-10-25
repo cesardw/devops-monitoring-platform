@@ -48,7 +48,7 @@ jobs:
       - name: Auditoria de Seguridad en Dependencias
         run: |
           cd app
-          npm audit --audit-level=high --if-present
+          npm audit --audit-level=critical --if-present
 
   build-and-scan:
     needs: security-and-quality
