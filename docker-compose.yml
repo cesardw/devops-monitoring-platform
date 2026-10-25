@@ -87,9 +87,7 @@ services:
       - "9093:9093"
     volumes:
       - ./monitoring/alertmanager:/etc/alertmanager:ro
-    environment:
-      - TELE_KEY=${TELE_KEY}
-      - TELE_USER=${TELE_USER}
+    
     networks:
       - devops-network
     logging:

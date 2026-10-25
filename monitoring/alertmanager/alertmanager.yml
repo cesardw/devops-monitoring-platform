@@ -11,8 +11,8 @@ route:
 receivers:
 - name: 'telegram'
   telegram_configs:
-  - bot_token: '${TELE_KEY}'
-    chat_id: '${TELE_USER}'
+  - bot_token: '8947378981:AAELu7DMbTSh4n_qQYL6QYbci9A8JUkaPKY'
+    chat_id: 7273472962
     parse_mode: 'HTML'
     message: |
       <b>Alertmanager - Alerta {{ .Status | toUpper }}</b>
