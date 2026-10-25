@@ -9,3 +9,21 @@ groups:
         annotations:
           summary: "Objetivo de monitoreo inaccesible"
           description: "Un objetivo lleva más de dos minutos sin responder."
+
+      - alert: HighCpuLoad
+        expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Uso elevado de CPU"
+          description: "CPU por encima del 85% durante 5 minutos."
+
+      - alert: DiskSpaceRunningLow
+        expr: (node_filesystem_avail_bytes{fstype!=""} / node_filesystem_size_bytes{fstype!=""}) * 100 < 15
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Espacio en disco crítico"
+          description: "Espacio en disco por debajo del 15%."

@@ -1,0 +1,25 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  group_by: ['alertname']
+  group_wait: 10s
+  group_interval: 10s
+  repeat_interval: 1h
+  receiver: 'telegram'
+
+receivers:
+- name: 'telegram'
+  telegram_configs:
+  - bot_token: 'TU_TOKEN_DEL_BOT'
+    chat_id: TU_CHAT_ID
+    parse_mode: 'HTML'
+    message: |
+      <b>Alertmanager - Alerta {{ .Status | toUpper }}</b>
+      
+      {{ range .Alerts }}
+      <b>Alerta:</b> {{ .Labels.alertname }}
+      <b>Severidad:</b> {{ .Labels.severity }}
+      <b>Resumen:</b> {{ .Annotations.summary }}
+      <b>Descripción:</b> {{ .Annotations.description }}
+      {{ end }}

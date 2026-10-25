@@ -78,6 +78,22 @@ services:
       options:
         max-size: "10m"
         max-file: "3"
+  
+  alertmanager:
+    image: prom/alertmanager:v0.27.0
+    container_name: devops-alertmanager
+    restart: unless-stopped
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./monitoring/alertmanager:/etc/alertmanager:ro
+    networks:
+      - devops-network
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
   grafana:
     image: grafana/grafana:11.2.0
     container_name: devops-grafana
