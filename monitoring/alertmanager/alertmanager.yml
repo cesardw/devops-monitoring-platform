@@ -11,12 +11,12 @@ route:
 receivers:
 - name: 'telegram'
   telegram_configs:
-  - bot_token: 'TU_TOKEN_DEL_BOT'
-    chat_id: TU_CHAT_ID
+  - bot_token: '${TELE_KEY}'
+    chat_id: '${TELE_USER}'
     parse_mode: 'HTML'
     message: |
       <b>Alertmanager - Alerta {{ .Status | toUpper }}</b>
-      
+
       {{ range .Alerts }}
       <b>Alerta:</b> {{ .Labels.alertname }}
       <b>Severidad:</b> {{ .Labels.severity }}
