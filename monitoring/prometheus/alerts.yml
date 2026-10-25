@@ -1,0 +1,11 @@
+groups:
+  - name: infrastructure-alerts
+    rules:
+      - alert: TargetDown
+        expr: up == 0
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Objetivo de monitoreo inaccesible"
+          description: "Un objetivo lleva más de dos minutos sin responder."
